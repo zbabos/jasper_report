@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report4" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a672dc3-56ae-4ca7-b473-a5705e3781a9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ReportTitle" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["???"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="brand" class="java.lang.String">
+		<fieldDescription><![CDATA[brand]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="color" class="java.lang.String">
+		<fieldDescription><![CDATA[color]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.String">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="price" class="java.lang.Integer">
+		<fieldDescription><![CDATA[price]]></fieldDescription>
+	</field>
+	<field name="sold" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[sold]]></fieldDescription>
+	</field>
+	<field name="year" class="java.lang.Integer">
+		<fieldDescription><![CDATA[year]]></fieldDescription>
+	</field>
+	<variable name="pageprice" class="java.lang.Integer" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{price}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="reportprice" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{price}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="40" width="555" height="1" uuid="52fef6f2-86f9-4355-800c-f5937b17412f"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="38" uuid="7b1087a3-3f2e-4408-88e9-0b76edc294cf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial Black" size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ReportTitle}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="3d535048-b568-4b5c-ab9d-cd70ff5e7bb7"/>
+				<text><![CDATA[Márka]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="20" uuid="f5b40509-72e8-4690-9890-75f8091524c0"/>
+				<text><![CDATA[Évjárat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="20" uuid="a4f28117-222a-424c-af84-b0e8e0a07766"/>
+				<text><![CDATA[Szín]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="20" uuid="82abfb2d-b572-4af2-bce0-84d7a986c8d5"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Ár]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="0" width="100" height="20" uuid="c6d8e0ca-f271-4740-8340-e53601f11fb9"/>
+				<text><![CDATA[Eladva]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" uuid="14c1defb-46e1-46c6-a4e7-5fff42bc48a4"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="7ba9d4dd-67d1-4cd4-8f76-e0195451e0dd"/>
+				<textFieldExpression><![CDATA[$F{brand}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="417" y="0" width="100" height="20" uuid="f97eb92f-64d6-4152-8b74-1891ede8e2c3"/>
+				<textFieldExpression><![CDATA[$F{sold}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="1076ba2d-8599-4813-b651-45f1b9404fea"/>
+				<textFieldExpression><![CDATA[$F{color}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0">
+				<reportElement x="300" y="0" width="100" height="20" uuid="89f5d176-66e5-48bb-93ed-2cba03461abb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="5bc7a0b4-f1c9-4c7a-8337-1c8b1ef1c25a"/>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="24" splitType="Stretch">
+			<textField pattern="$ #,##0">
+				<reportElement x="300" y="4" width="100" height="20" uuid="b1c15ea6-dca5-4f31-9963-a4cc2efa0b3e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{pageprice}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="200" y="4" width="100" height="20" uuid="50fa0757-cbaa-432b-a18c-256dbf53f728"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Összesen a lapon:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="188a2def-d603-468d-ba3c-c18b904cbcba"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="29" splitType="Stretch">
+			<textField pattern="$ #,##0">
+				<reportElement x="300" y="9" width="100" height="20" uuid="396a83ea-0ec1-477a-906e-328b5dc79bb6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{reportprice}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="200" y="9" width="100" height="20" uuid="dac63b2b-7a80-4b2f-aadc-37e5d9e0a4e4"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Totál összesen:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="7b214cff-ceab-4612-bb50-563d293cab6c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="3" width="555" height="1" uuid="13ad8930-a2a7-4a8a-aee4-0a3ec8ffb013"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

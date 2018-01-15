@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      >
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+
+            <p:growl id="growl" showDetail="true" sticky="false"   widgetVar="growlWV" autoUpdate="true" life="2000" /> 
+            
+    <p:dataTable id="tbl" var="car" value="#{index.cars}"
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px">
+        
+        <f:facet name="{Exporters}">
+            <h:commandLink>
+                <p:graphicImage name="excel.png" width="24"/>
+                <p:dataExporter type="xls" target="tbl" fileName="cars" />
+            </h:commandLink>
+ 
+            <h:commandLink>
+                <p:graphicImage name="pdf.png" width="24"/>
+                <p:dataExporter type="pdf" target="tbl" fileName="cars"/>
+            </h:commandLink>
+ 
+            <h:commandLink>
+                <p:graphicImage name="csv.png" width="24"/>
+                <p:dataExporter type="csv" target="tbl" fileName="cars" />
+            </h:commandLink>
+ 
+            <h:commandLink>
+                <p:graphicImage name="xml.png" width="24"/>
+                <p:dataExporter type="xml" target="tbl" fileName="cars" />
+            </h:commandLink>
+        </f:facet>
+ 
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Azonosító" />
+            </f:facet>
+            <h:outputText value="#{car.id}" />
+        </p:column>
+ 
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Évszám"/>
+            </f:facet>
+            <h:outputText value="#{car.year}" />
+        </p:column>
+ 
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Márka" />
+            </f:facet>
+            <h:outputText value="#{car.brand}" />
+        </p:column>
+ 
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Szín €" />
+            </f:facet>
+            <h:outputText value="#{car.color}" />
+        </p:column>
+    </p:dataTable>
+ 
+    
+    <h:commandLink actionListener="#{index.printAction}">
+        Nyomtatás
+    </h:commandLink>
+    &nbsp; &nbsp;
+    
+    
+    <h:commandLink actionListener="#{index.pdfAction}">
+        <p:graphicImage  value="pdf.png" />
+        jasper pdf és xml fájlba ment fix helyre
+            
+    </h:commandLink>
+    &nbsp; &nbsp;
+
+    <h:commandLink actionListener="#{index.xmldownloadAction}">
+        <p:graphicImage  value="xml.png" />
+        jasper xml download
+    </h:commandLink>
+    &nbsp; &nbsp;
+
+    <h:commandLink actionListener="#{index.pdfdownloadAction}">
+        <p:graphicImage  value="pdf.png" />
+        jasper pdf download
+    </h:commandLink>
+    
+</h:form>
+
+    </h:body>
+</html>
+
