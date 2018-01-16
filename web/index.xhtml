@@ -69,16 +69,20 @@
         </p:column>
     </p:dataTable>
  
+    <h:commandLink actionListener="#{index.defprintAction}">
+        Print to default printer
+    </h:commandLink>
+    &nbsp; &nbsp; &nbsp; &nbsp;
     
     <h:commandLink actionListener="#{index.printAction}">
-        Nyomtatás
+        Print to a specified printer
     </h:commandLink>
-    &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp;
     
     
     <h:commandLink actionListener="#{index.pdfAction}">
         <p:graphicImage  value="pdf.png" />
-        jasper pdf és xml fájlba ment fix helyre
+        save to pdf and xml files on local disk
             
     </h:commandLink>
     &nbsp; &nbsp;

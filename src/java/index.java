@@ -1,4 +1,3 @@
-
  
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
@@ -35,6 +34,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimplePrintServiceExporterConfiguration;
@@ -45,9 +45,6 @@ import org.babos.car.Car;
 public class index implements Serializable {
      
     private List<Car> cars;
-         
-    //@ManagedProperty("#{carService}")
-    //private CarService service;
      
     @PostConstruct
     public void init() {
@@ -57,166 +54,130 @@ public class index implements Serializable {
     public List<Car> getCars() {
         return cars;
     }
- 
- //   public void setService(CarService service) {
- //       this.service = service;
- //   }
     
-    public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
-        Document pdf = (Document) document;
-        FontFactory.register("C:\\Windows\\Fonts\\ariblk.ttf", "Arial Black");
-        pdf.setPageSize(PageSize.A4.rotate());
- //       pdf.open();
-     }
-    
-    
-private void PrintReportToPrinter(JasperPrint jasperPrint) throws JRException {
-
-    //Get the printers names
-    PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
-
-    //Lets set the printer name based on the registered printers driver name (you can see the printer names in the services variable at debugging) 
-    String selectedPrinter = "Microsoft XPS Document Writer";   
-    // String selectedPrinter = "\\\\S-BPPRINT\\HP Color LaserJet 4700"; // examlpe to network shared printer
-    
-    System.out.println("Number of print services: " + services.length);
-    PrintService selectedService = null;
-
-    //Set the printing settings
-    PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-    printRequestAttributeSet.add(MediaSizeName.ISO_A4);
-    printRequestAttributeSet.add(new Copies(1));
-    if (jasperPrint.getOrientationValue() == net.sf.jasperreports.engine.type.OrientationEnum.LANDSCAPE) { 
-      printRequestAttributeSet.add(OrientationRequested.LANDSCAPE); 
-    } else { 
-      printRequestAttributeSet.add(OrientationRequested.PORTRAIT); 
-    } 
-    PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
-    printServiceAttributeSet.add(new PrinterName(selectedPrinter, null));
-
-    JRPrintServiceExporter exporter = new JRPrintServiceExporter();
-    SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
-    configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
-    configuration.setPrintServiceAttributeSet(printServiceAttributeSet);
-    configuration.setDisplayPageDialog(false);
-    configuration.setDisplayPrintDialog(false);
-
-    exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-    exporter.setConfiguration(configuration);
-
-    //Iterate through available printer, and once matched with our CANON PIXMA, go ahead and print!
-    if(services.length != 0 || services != null){
-      for(PrintService service : services){
-          String existingPrinter = service.getName();
-          if(existingPrinter.equals(selectedPrinter))
-          {
-              selectedService = service;
-              break;
-          }
-      }
-    }
-    if(selectedService != null)
-    {	
-      try{
-          //Lets the printer do its magic!
-          exporter.exportReport();
-      }catch(Exception e){
-	System.out.println("JasperReport Error: "+e.getMessage());
-      }
-    }else{
-      System.out.println("JasperReport Error: Printer not found!");
-    }    
-}
-    
-    
-    
-private void PrintReportToPrinter1(JasperPrint jasperPrint) throws JRException {
-    // printRequestAttributeSet.add(MediaSizeName.ISO_A4); //setting page size
- //   printRequestAttributeSet.add(new Copies(1));
-//    PrinterName printerName = new PrinterName("Microsoft XPS Document Writer", null); //gets printer 
-
-
-    //Get the printers job and names
-    PrinterJob printerJob = PrinterJob.getPrinterJob();
-    PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
-
-    //Lets set the printer name based on the registered printers driver name  
-    // String selectedPrinter = "Microsoft XPS Document Writer";  // 
-    String selectedPrinter = "\\\\s-bpprint\\Konica Központi nyomtató";
-    // String selectedPrinter = "\\\\S-BPPRINT\\HP Color LaserJet 4700";
-    
-    System.out.println("Number of print services: " + services.length);
-    PrintService selectedService = null;
-
-    //Set the printing settings
-    PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-    printRequestAttributeSet.add(MediaSizeName.ISO_A4);
-    printRequestAttributeSet.add(new Copies(1));
-    if (jasperPrint.getOrientationValue() == net.sf.jasperreports.engine.type.OrientationEnum.LANDSCAPE) { 
-      printRequestAttributeSet.add(OrientationRequested.LANDSCAPE); 
-    } else { 
-      printRequestAttributeSet.add(OrientationRequested.PORTRAIT); 
-    } 
-    PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
-    printServiceAttributeSet.add(new PrinterName(selectedPrinter, null));
-
-    JRPrintServiceExporter exporter = new JRPrintServiceExporter();
-    SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
-    configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
-    configuration.setPrintServiceAttributeSet(printServiceAttributeSet);
-    configuration.setDisplayPageDialog(false);
-    configuration.setDisplayPrintDialog(false);
-
-    exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-    exporter.setConfiguration(configuration);
-
-    //Iterate through available printer, and once matched with our CANON PIXMA, go ahead and print!
-    if(services.length != 0 || services != null){
-      for(PrintService service : services){
-          String existingPrinter = service.getName();
-          if(existingPrinter.equals(selectedPrinter))
-          {
-              selectedService = service;
-              break;
-          }
-      }
-    }
-    if(selectedService != null)
-    {	
-      try{
-          //Lets the printer do its magic!
-          exporter.exportReport();
-      }catch(Exception e){
-          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "JasperReport Error!", e.getMessage()));
-      }
-    }else{
-      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "JasperReport Error!", "Printer not found!"));
-    }    
-}
-
- public void printAction(ActionEvent actionEvent) {
+   
+    // Print to default printer
+    public void defprintAction(ActionEvent actionEvent) {
 
             try {
 
                 String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
 
                 JasperReport jasperReport = JasperCompileManager.compileReport(absoluteWebPath+"report4.jrxml");        
-                //report3.jasper: JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
                 //JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report4.jasper");
+                //report3.jasper (without datasource): JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
+
                 System.out.println("JasperReport : compileReport OK: "+jasperReport.getName());
 
                 Map parameters = new HashMap();
                 parameters.put("ReportTitle", "Cars");
                 
                 // Fill the Jasper Report
-                //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  ez nem jó, mert üres lapot ad vissza, mert bug-os.
-                //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); 
-                
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(cars));
+                //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  this is not good, it will result an empty page
+                //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); // new JREmptyDataSource() is needed if there is no DataSource
+
                 System.out.println("JasperReport : fillReport OK "+jasperReport.getName());
 
                 // print Jasper Reports
-                // JasperPrintManager.printReport(jasperPrint, false);
+                JasperPrintManager.printReport(jasperPrint, false); // print to default printer
+                   
+            }
+            catch (JRException e) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "JasperReport Error!", e.getMessage()));
+            }
+      
+    }
+    
+ 
+ 
+ 
+     
+    // procedure for print to a specified printer    
+    private void PrintReportToPrinter(JasperPrint jasperPrint) throws JRException {
+
+        //Get the printers job and names
+        PrinterJob printerJob = PrinterJob.getPrinterJob();
+        PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
+
+        //Lets set the printer name based on the registered printers driver name  
+         String selectedPrinter = "Microsoft XPS Document Writer";  // 
+        // String selectedPrinter = "\\\\s-bpprint\\Konica Központi nyomtató";
+        // String selectedPrinter = "\\\\S-BPPRINT\\HP Color LaserJet 4700";
+
+        System.out.println("Number of print services: " + services.length);
+        PrintService selectedService = null;
+
+        //Set the printing settings
+        PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+        printRequestAttributeSet.add(MediaSizeName.ISO_A4);
+        printRequestAttributeSet.add(new Copies(1));
+        if (jasperPrint.getOrientationValue() == net.sf.jasperreports.engine.type.OrientationEnum.LANDSCAPE) { 
+          printRequestAttributeSet.add(OrientationRequested.LANDSCAPE); 
+        } else { 
+          printRequestAttributeSet.add(OrientationRequested.PORTRAIT); 
+        } 
+        PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
+        printServiceAttributeSet.add(new PrinterName(selectedPrinter, null));
+
+        JRPrintServiceExporter exporter = new JRPrintServiceExporter();
+        SimplePrintServiceExporterConfiguration configuration = new SimplePrintServiceExporterConfiguration();
+        configuration.setPrintRequestAttributeSet(printRequestAttributeSet);
+        configuration.setPrintServiceAttributeSet(printServiceAttributeSet);
+        configuration.setDisplayPageDialog(false);
+        configuration.setDisplayPrintDialog(false);
+
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+        exporter.setConfiguration(configuration);
+
+        //Iterate through available printer, and once matched with our CANON PIXMA, go ahead and print!
+        if(services.length != 0 || services != null){
+          for(PrintService service : services){
+              String existingPrinter = service.getName();
+              if(existingPrinter.equals(selectedPrinter))
+              {
+                  selectedService = service;
+                  break;
+              }
+          }
+        }
+        if(selectedService != null)
+        {	
+          try{
+              //Lets the printer do its magic!
+              exporter.exportReport();
+          }catch(Exception e){
+              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "JasperReport Error!", e.getMessage()));
+          }
+        }else{
+          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "JasperReport Error!", "Printer not found!"));
+        }    
+    }
+
+
+    //  Print to a specified printer
+    public void printAction(ActionEvent actionEvent) {
+
+            try {
+
+                String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+
+                JasperReport jasperReport = JasperCompileManager.compileReport(absoluteWebPath+"report4.jrxml");        
+                //JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report4.jasper");
+                //report3.jasper (without datasource): JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
+                System.out.println("JasperReport : compileReport OK: "+jasperReport.getName());
+
+                Map parameters = new HashMap();
+                parameters.put("ReportTitle", "Cars");
+                
+                // Fill the Jasper Report
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(cars));
+                //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  this is not good, it will result an empty page
+                //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); // new JREmptyDataSource() is needed if there is no DataSource
+                System.out.println("JasperReport : fillReport OK "+jasperReport.getName());
+
+                // print Jasper Reports
+                // JasperPrintManager.printReport(jasperPrint, false);  print to default printer
                 
                 PrintReportToPrinter(jasperPrint);
 
@@ -228,7 +189,8 @@ private void PrintReportToPrinter1(JasperPrint jasperPrint) throws JRException {
       
     }
     
-    
+ 
+ 
     public void pdfAction(ActionEvent actionEvent) {
 
             try {
@@ -236,24 +198,23 @@ private void PrintReportToPrinter1(JasperPrint jasperPrint) throws JRException {
                 String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
 
                 JasperReport jasperReport = JasperCompileManager.compileReport(absoluteWebPath+"report4.jrxml");        
-                //report3.jasper: JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
                 //JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report4.jasper");
+                //report3.jasper (without datasource): JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
                 System.out.println("JasperReport : compileReport OK: "+jasperReport.getName());
 
                 Map parameters = new HashMap();
                 parameters.put("ReportTitle", "Cars");
                 
                 // Fill the Jasper Report
-                //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  ez nem jó, mert üres lapot ad vissza, mert bug-os.
-                //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); 
-                
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(cars));
+                //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  this is not good, it will result an empty page
+                //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); // new JREmptyDataSource() is needed if there is no DataSource
                 System.out.println("JasperReport : fillReport OK "+jasperReport.getName());
 
                 // Creation of the HTML Jasper Reports
-                JasperExportManager.exportReportToHtmlFile(jasperPrint, "d:\\Inkasszo2\\report\\MyJasperReport.html");
+                JasperExportManager.exportReportToHtmlFile(jasperPrint, "d:\\report\\MyJasperReport.html");
                 
-                JasperExportManager.exportReportToPdfFile(jasperPrint, "d:\\Inkasszo2\\report\\MyJasperReport.pdf");
+                JasperExportManager.exportReportToPdfFile(jasperPrint, "d:\\report\\MyJasperReport.pdf");
                    
             }
             catch (JRException e) {
@@ -270,18 +231,17 @@ private void PrintReportToPrinter1(JasperPrint jasperPrint) throws JRException {
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
 
             //JasperReport jasperReport = JasperCompileManager.compileReport(absoluteWebPath+"report4.jasper");        
-            //report3.jasper: JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
             JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report4.jasper");
+            //report3.jasper (without datasource): JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
             System.out.println("JasperReport : compileReport OK: "+jasperReport.getName());
 
             Map parameters = new HashMap();
             parameters.put("ReportTitle", "Cars");
 
             // Fill the Jasper Report
-            //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  ez nem jó, mert üres lapot ad vissza, mert bug-os.
-            //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); 
-
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(cars));
+            //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  this is not good, it will result an empty page
+            //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); // new JREmptyDataSource() is needed if there is no DataSource
             System.out.println("JasperReport : fillReport OK "+jasperReport.getName());
 
            // download 
@@ -309,18 +269,17 @@ private void PrintReportToPrinter1(JasperPrint jasperPrint) throws JRException {
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
 
             //JasperReport jasperReport = JasperCompileManager.compileReport(absoluteWebPath+"report4.jasper");        
-            //report3.jasper: JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
             JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report4.jasper");
+            //report3.jasper (without datasource): JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(absoluteWebPath+"report3.jasper");
             System.out.println("JasperReport : compileReport OK: "+jasperReport.getName());
 
             Map parameters = new HashMap();
             parameters.put("ReportTitle", "Cars");
 
             // Fill the Jasper Report
-            //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  ez nem jó, mert üres lapot ad vissza, mert bug-os.
-            //report3.jasper: JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); 
-
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JRBeanCollectionDataSource(cars));
+            //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters);  this is not good, it will result an empty page
+            //report3.jasper (without datasource): JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource()); // new JREmptyDataSource() is needed if there is no DataSource
             System.out.println("JasperReport : fillReport OK "+jasperReport.getName());
 
            // download 
